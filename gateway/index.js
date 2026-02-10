@@ -43,6 +43,13 @@ app.use('/api/phones', createProxyMiddleware({
   }
 }));
 
+// User Service
+app.use('/api/users', createProxyMiddleware({
+  target: 'http://localhost:3004',
+  changeOrigin: true,
+  pathRewrite: () => '/users'
+}));
+
 // Start gateway
 app.listen(3003, () => {
   console.log('API Gateway running at http://localhost:3003');
