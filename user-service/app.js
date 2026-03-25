@@ -9,6 +9,6 @@ app.use(express.json());
 connectDB();
 
 // routes
-app.use("/api/users", require("./src/routes/userRoutes"));
+app.use("/", require("./src/routes/userRoutes"));
 
 module.exports = app;
