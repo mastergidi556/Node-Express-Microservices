@@ -1,4 +1,4 @@
 module.exports = {
-  phoneService: "http://localhost:4002",
-  userService: "http://localhost:4001"
+  phoneService: "http://phone-service:4002",
+  userService: "http://user-service:4001"
 };

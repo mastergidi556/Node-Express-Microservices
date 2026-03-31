@@ -9,6 +9,6 @@ app.use(express.json());
 connectDB();
 
 // routes
-app.use("/", require("./src/routes/phoneRoutes"));
+app.use("/api/phones", require("./src/routes/phoneRoutes"));
 
 module.exports = app;

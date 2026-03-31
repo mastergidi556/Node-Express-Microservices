@@ -1,0 +1,44 @@
+version: "3.9"
+
+services:
+  mongo:
+    image: mongo:6
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  user-service:
+    build: ./user-service
+    container_name: user-service
+    ports:
+      - "4001:4001"
+    env_file:
+      - ./user-service/.env
+    depends_on:
+      - mongo
+
+  phone-service:
+    build: ./phone-service
+    container_name: phone-service
+    ports:
+      - "4002:4002"
+    env_file:
+      - ./phone-service/.env
+    depends_on:
+      - mongo
+
+  api-gateway:
+    build: ./api-gateway
+    container_name: api-gateway
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./api-gateway/.env
+    depends_on:
+      - user-service
+      - phone-service
+
+volumes:
+  mongo-data:
