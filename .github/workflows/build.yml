@@ -1,0 +1,47 @@
+name: Build and Push Docker Images
+
+on:
+  workflow_dispatch:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push user-service
+        uses: docker/build-push-action@v5
+        with:
+          context: ./user-service
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/user-service:latest
+            ghcr.io/${{ github.repository_owner }}/user-service:sha-${{ github.sha }}
+
+      - name: Build and push phone-service
+        uses: docker/build-push-action@v5
+        with:
+          context: ./phone-service
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/phone-service:latest
+            ghcr.io/${{ github.repository_owner }}/phone-service:sha-${{ github.sha }}
+
+      - name: Build and push api-gateway
+        uses: docker/build-push-action@v5
+        with:
+          context: ./api-gateway
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/api-gateway:latest
+            ghcr.io/${{ github.repository_owner }}/api-gateway:sha-${{ github.sha }}
