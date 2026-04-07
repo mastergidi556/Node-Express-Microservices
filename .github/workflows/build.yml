@@ -33,7 +33,7 @@ jobs:
           context: ./phone-service
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/phone-service:lates
+            ghcr.io/${{ github.repository_owner }}/phone-service:latest
             ghcr.io/${{ github.repository_owner }}/phone-service:sha-${{ github.sha }}
 
       - name: Build and push api-gateway
