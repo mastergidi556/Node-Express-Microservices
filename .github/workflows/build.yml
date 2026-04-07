@@ -2,8 +2,7 @@ name: Build and Push Docker Images
 
 on:
   workflow_dispatch:
-    branches: [ "main" ]
-
+    
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -34,7 +33,7 @@ jobs:
           context: ./phone-service
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/phone-service:latest
+            ghcr.io/${{ github.repository_owner }}/phone-service:lates
             ghcr.io/${{ github.repository_owner }}/phone-service:sha-${{ github.sha }}
 
       - name: Build and push api-gateway
