@@ -1,0 +1,90 @@
+name: Deploy Microservices
+
+on:
+    workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      USER_SERVICE_MONGO_URI: ${{ secrets.USER_SERVICE_MONGO_URI }}
+      USER_SERVICE_PORT: ${{ secrets.USER_SERVICE_PORT }}
+
+      PHONE_SERVICE_MONGO_URI: ${{ secrets.PHONE_SERVICE_MONGO_URI }}
+      PHONE_SERVICE_PORT: ${{ secrets.PHONE_SERVICE_PORT }}
+
+      API_GATEWAY_PORT: ${{ secrets.API_GATEWAY_PORT }}
+      API_GATEWAY_USER_SERVICE_URL: ${{ secrets.API_GATEWAY_USER_SERVICE_URL }}
+      API_GATEWAY_PHONE_SERVICE_URL: ${{ secrets.API_GATEWAY_PHONE_SERVICE_URL }}
+
+      EC2_PUBLIC_IP: ${{ secrets.EC2_PUBLIC_IP }}
+      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    steps:
+      # ---------------------------------------------------------
+      # 1. Checkout code
+      # ---------------------------------------------------------
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # ---------------------------------------------------------
+      # 2. Install Terraform
+      # ---------------------------------------------------------
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+
+      - name: Terraform Init
+        working-directory: ./terraform
+        run: terraform init
+
+      - name: Terraform Apply
+        working-directory: ./terraform
+        run: terraform apply -auto-approve
+
+      # ---------------------------------------------------------
+      # 3. Install Ansible
+      # ---------------------------------------------------------
+      - name: Install Ansible
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ansible
+
+      # ---------------------------------------------------------
+      # 4. Configure SSH for Ansible + EC2
+      # ---------------------------------------------------------
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${SSH_PRIVATE_KEY}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H $EC2_PUBLIC_IP >> ~/.ssh/known_hosts
+
+      # ---------------------------------------------------------
+      # 5. Run Ansible Playbook (with secrets injected)
+      # ---------------------------------------------------------
+      - name: Run Ansible Playbook
+        run: |
+          ansible-playbook \
+            -i ansible/inventory \
+            ansible/playbook.yml \
+            --extra-vars "
+              user_service_mongo_uri=$USER_SERVICE_MONGO_URI
+              user_service_port=$USER_SERVICE_PORT
+              phone_service_mongo_uri=$PHONE_SERVICE_MONGO_URI
+              phone_service_port=$PHONE_SERVICE_PORT
+              api_gateway_port=$API_GATEWAY_PORT
+              api_gateway_user_service_url=$API_GATEWAY_USER_SERVICE_URL
+              api_gateway_phone_service_url=$API_GATEWAY_PHONE_SERVICE_URL
+            "
+
+      # ---------------------------------------------------------
+      # 6. Pull latest images + start containers
+      # ---------------------------------------------------------
+      - name: Pull and start containers
+        run: |
+          ssh -o StrictHostKeyChecking=no ubuntu@$EC2_PUBLIC_IP "
+            cd /home/ubuntu/app &&
+            docker compose pull &&
+            docker compose up -d
+          "
