@@ -19,3 +19,8 @@ variable "public_key_path" {
   description = "Path to your public SSH key"
   type        = string
 }
+
+variable "public_key" {
+  type = string
+}
+
