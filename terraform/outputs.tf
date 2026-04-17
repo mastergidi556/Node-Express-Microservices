@@ -8,6 +8,4 @@ output "instance_id" {
   value       = aws_instance.microservices_vm.id
 }
 
-output "public_ip" {
-  value = aws_instance.microservice_instance.public_ip
-}
+
