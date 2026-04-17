@@ -18,7 +18,7 @@ jobs:
       API_GATEWAY_USER_SERVICE_URL: ${{ secrets.API_GATEWAY_USER_SERVICE_URL }}
       API_GATEWAY_PHONE_SERVICE_URL: ${{ secrets.API_GATEWAY_PHONE_SERVICE_URL }}
 
-      EC2_PUBLIC_IP: ${{ secrets.EC2_PUBLIC_IP }}
+      
       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       AWS_SSH_PUBLIC_KEY: ${{ secrets.AWS_SSH_PUBLIC_KEY }}
 
@@ -48,8 +48,12 @@ jobs:
         run: terraform init
 
       - name: Terraform Apply
+        id: tfapply
         working-directory: ./terraform
-        run: terraform apply -auto-approve -var="public_key=$AWS_SSH_PUBLIC_KEY"
+        run: |
+          terraform apply -auto-approve -var="public_key=$AWS_SSH_PUBLIC_KEY"
+          echo "EC2_PUBLIC_IP=$(terraform output -raw public_ip)" >> $GITHUB_ENV
+
 
       # ---------------------------------------------------------
       # 3. Install Ansible

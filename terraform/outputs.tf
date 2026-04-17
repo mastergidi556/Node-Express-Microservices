@@ -7,3 +7,7 @@ output "instance_id" {
   description = "EC2 instance ID"
   value       = aws_instance.microservices_vm.id
 }
+
+output "public_ip" {
+  value = aws_instance.microservice_instance.public_ip
+}
