@@ -52,7 +52,9 @@ jobs:
         working-directory: ./terraform
         run: |
           terraform apply -auto-approve -var="public_key=$AWS_SSH_PUBLIC_KEY"
-          echo EC2_PUBLIC_IP=\"$(terraform output -raw public_ip)\" >> $GITHUB_ENV
+          IP=$(terraform output -raw public_ip)
+          echo "EC2_PUBLIC_IP=$IP" >> $GITHUB_ENV
+
 
 
 

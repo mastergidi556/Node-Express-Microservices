@@ -41,7 +41,7 @@ resource "aws_security_group" "microservices_sg" {
 }
 
 resource "aws_instance" "microservices_vm" {
-  ami           = "ami-04b70fa74e45c3917" 
+  ami           = "ami-04b70fa74e45c3917"
   instance_type = var.instance_type
   key_name      = aws_key_pair.deployer.key_name
 
