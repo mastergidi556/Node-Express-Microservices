@@ -6,3 +6,25 @@
   roles:
     - docker
     - deploy
+
+- name: Create user-service .env file
+  copy:
+    dest: /home/ubuntu/app/user-service/.env
+    content: |
+      MONGO_URI={{ user_service_mongo_uri }}
+      PORT={{ user_service_port }}
+
+- name: Create phone-service .env file
+  copy:
+    dest: /home/ubuntu/app/phone-service/.env
+    content: |
+      MONGO_URI={{ phone_service_mongo_uri }}
+      PORT={{ phone_service_port }}
+
+- name: Create api-gateway .env file
+  copy:
+    dest: /home/ubuntu/app/api-gateway/.env
+    content: |
+      PORT={{ api_gateway_port }}
+      USER_SERVICE_URL={{ api_gateway_user_service_url }}
+      PHONE_SERVICE_URL={{ api_gateway_phone_service_url }}
