@@ -99,6 +99,8 @@ jobs:
         run: |
           ansible-playbook \
             -i "$EC2_PUBLIC_IP," \
+            -u ubuntu \
+            --private-key ~/.ssh/id_ed25519 \
             ansible/playbook.yml \
             --extra-vars "
               user_service_mongo_uri=$USER_SERVICE_MONGO_URI
@@ -109,6 +111,7 @@ jobs:
               api_gateway_user_service_url=$API_GATEWAY_USER_SERVICE_URL
               api_gateway_phone_service_url=$API_GATEWAY_PHONE_SERVICE_URL
             "
+
 
 
       # ---------------------------------------------------------
