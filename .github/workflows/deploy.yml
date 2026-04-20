@@ -52,9 +52,10 @@ jobs:
         working-directory: ./terraform
         run: |
           terraform apply -auto-approve -var="public_key=$AWS_SSH_PUBLIC_KEY"
-          
-          IP=$(terraform output -raw public_ip)
+
+          IP=$(terraform output -raw public_ip 2>/dev/null | tr -d '\n' | tr -d '\r')
           echo EC2_PUBLIC_IP=$IP >> $GITHUB_ENV
+
 
       - name: Wait for EC2 to be ready
         run: |
@@ -115,7 +116,7 @@ jobs:
       # ---------------------------------------------------------
       - name: Pull and start containers
         run: |
-          ssh -o StrictHostKeyChecking=no ubuntu@$EC2_PUBLIC_IP "
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519 ubuntu@$EC2_PUBLIC_IP "
             cd /home/ubuntu/app &&
             docker compose pull &&
             docker compose up -d
