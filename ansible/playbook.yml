@@ -1,6 +1,6 @@
 ---
 - name: Provision EC2 for microservices
-  hosts: ec2
+  hosts: all
   become: yes
 
   roles:
