@@ -15,6 +15,13 @@
     group: ubuntu
     mode: '0644'
 
+- name: Install Git
+  apt:
+    name: git
+    state: present
+    update_cache: yes
+
+
 - name: Clone microservices repo
   git:
     repo: "https://github.com/mastergid556/Node-Express-Microservices.git"
