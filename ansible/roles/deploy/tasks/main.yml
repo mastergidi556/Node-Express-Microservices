@@ -14,3 +14,20 @@
     owner: ubuntu
     group: ubuntu
     mode: '0644'
+
+
+- name: Create user-service .env file
+  template:
+    src: user-service.env.j2
+    dest: /home/ubuntu/app/user-service/.env
+
+- name: Create phone-service .env file
+  template:
+    src: phone-service.env.j2
+    dest: /home/ubuntu/app/phone-service/.env
+
+- name: Create api-gateway .env file
+  template:
+    src: api-gateway.env.j2
+    dest: /home/ubuntu/app/api-gateway/.env
+
