@@ -15,6 +15,13 @@
     group: ubuntu
     mode: '0644'
 
+- name: Clone microservices repo
+  git:
+    repo: "https://github.com/mastergid556/Node-Express-Microservices.git"
+    dest: /home/ubuntu/app
+    version: main
+
+
 
 - name: Create user-service .env file
   template:
