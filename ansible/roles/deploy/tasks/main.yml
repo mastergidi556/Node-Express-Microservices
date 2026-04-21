@@ -7,13 +7,7 @@
     group: ubuntu
     mode: '0755'
 
-- name: Copy docker-compose.yml
-  copy:
-    src: docker-compose.yml
-    dest: /home/ubuntu/app/docker-compose.yml
-    owner: ubuntu
-    group: ubuntu
-    mode: '0644'
+
 
 - name: Install Git
   apt:
@@ -27,6 +21,14 @@
     repo: "https://github.com/mastergid556/Node-Express-Microservices.git"
     dest: /home/ubuntu/app
     version: main
+
+- name: Copy docker-compose.yml
+  copy:
+    src: docker-compose.yml
+    dest: /home/ubuntu/app/docker-compose.yml
+    owner: ubuntu
+    group: ubuntu
+    mode: '0644'
 
 
 
