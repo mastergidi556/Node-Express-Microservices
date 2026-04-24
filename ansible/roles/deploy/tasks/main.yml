@@ -18,10 +18,14 @@
 
 - name: Clone microservices repo
   git:
-    repo: "https://github.com/mastergid556/Node-Express-Microservices.git"
+    repo: "https://github.com/mastergidi556/Node-Express-Microservices.git"
     dest: /home/ubuntu/app
-    version: main
+    version: master
+    force: yes
+  environment:
+    GIT_TERMINAL_PROMPT: "0"
 
+    
 - name: Copy docker-compose.yml
   copy:
     src: docker-compose.yml
