@@ -8,6 +8,8 @@ services:
       - "27017:27017"
     volumes:
       - mongo-data:/data/db
+    networks:
+      - microservices
 
   user-service:
     build: ./user-service
@@ -18,6 +20,8 @@ services:
       - ./user-service/.env
     depends_on:
       - mongo
+    networks:
+      - microservices
 
   phone-service:
     build: ./phone-service
@@ -28,6 +32,8 @@ services:
       - ./phone-service/.env
     depends_on:
       - mongo
+    networks:
+      - microservices
 
   api-gateway:
     build: ./api-gateway
@@ -39,6 +45,12 @@ services:
     depends_on:
       - user-service
       - phone-service
+    networks:
+      - microservices
 
 volumes:
   mongo-data:
+
+networks:
+  microservices:
+    driver: bridge
